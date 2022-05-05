@@ -1,0 +1,13 @@
+{
+  "name": "8i_postulacion",
+  "version": "1.0.0",
+  "description": "Prueba tecnica de postulación",
+  "main": "server.js",
+  "scripts": {
+    "serve": "nodemon app.js",
+    "prod": "",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "NemusD",
+  "license": "ISC"
+}
