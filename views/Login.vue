@@ -1,64 +1,107 @@
 <template>
-    <div>
-    <html>
-
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Login - Free Bulma template</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet"> -->
-        <link href="https://fonts.googleapis.com/css?family=Questrial&display=swap" rel="stylesheet">
-    <!-- Bulma Version 0.9.0-->
-        <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
-        <link rel="stylesheet" type="text/css" href="../css/login.css">
-    </head>
-
-    <body>
-        <section class="hero is-success is-fullheight">
-            <div class="hero-body">
-                <div class="container has-text-centered">
-                    <div class="column is-4 is-offset-4">
-                        <h3 class="title has-text-black">Login</h3>
-                        <hr class="login-hr">
-                        <p class="subtitle has-text-black">Please login to proceed.</p>
-                        <div class="box">
-                            <figure class="avatar">
-                                <img src="https://placehold.it/128x128">
-                            </figure>
-                            <form>
-                                <div class="field">
-                                    <div class="control">
-                                        <input class="input is-large" type="email" placeholder="Your Email" autofocus="">
-                                    </div>
-                                </div>
-                            <div class="field">
-                                <div class="control">
-                                    <input class="input is-large" type="password" placeholder="Your Password">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label class="checkbox">
-                                <input type="checkbox">
-                                Remember me
-                                </label>
-                            </div>
-                            <button class="button is-block is-info is-large is-fullwidth">Login <i class="fa fa-sign-in" aria-hidden="true"></i></button>
-                            </form>
-                        </div>
-                            <p class="has-text-grey">
-                                <a href="../">Sign Up</a> &nbsp;·&nbsp;
-                                <a href="../">Forgot Password</a> &nbsp;·&nbsp;
-                                <a href="../">Need Help?</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        <script async type="text/javascript" src="../js/bulma.js"></script>
-    </body>
-
-    </html>
-    </div>
+  <div class="login">
+    <h1 class="title">Login in the page</h1>
+    <form action class="form" @submit.prevent="login">
+      <label class="form-label" for="#email">Email:</label>
+      <input 
+      v-model="email" 
+      class="form-input" 
+      type="email" 
+      id="email" 
+      required placeholder="Email">
+      <label class="form-label" for="#password">Password:</label>
+      <input 
+      v-model="password" 
+      class="form-input" 
+      type="password" 
+      id="password" 
+      placeholder="Password">
+      <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
+      <input class="form-submit" type="submit" value="Login">
+    </form>
+    <p class="msg"> ¿No tienes cuenta?
+        <router-link to = "/register">Regístrate</router-link>
+    </p>
+  </div>
 </template>
+
+<script>
+import auth from "@/logic/auth";
+//import Router from '../router.vue';
+export default {
+    data: () => ({
+        email: "",
+        password: "",
+        error: false
+    }),
+    //metodos para enviar la petición de login
+    methods: {
+        async login() {
+            try {
+                await auth.login(this.email, this.password);
+                const user = {
+                    email: this.email
+                };
+                auth.setUserLogged(user);
+                this.$router.push("/");
+            } catch (error) {
+                this.error = true;
+            }
+        }
+    }
+};
+
+</script>
+
+<style lang="scss" scoped>
+.login {
+  padding: 2rem;
+}
+.title {
+  text-align: center;
+}
+.form {
+  margin: 3rem auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 20%;
+  min-width: 350px;
+  max-width: 100%;
+  background: rgba(19, 35, 47, 0.9);
+  border-radius: 5px;
+  padding: 40px;
+  box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
+}
+.form-label {
+  margin-top: 2rem;
+  color: white;
+  margin-bottom: 0.5rem;
+  &:first-of-type {
+    margin-top: 0rem;
+  }
+}
+.form-input {
+  padding: 10px 15px;
+  background: none;
+  background-image: none;
+  border: 1px solid white;
+  color: white;
+  &:focus {
+    outline: 0;
+    border-color: #1ab188;
+  }
+}
+.form-submit {
+  background: #1ab188;
+  border: none;
+  color: white;
+  margin-top: 3rem;
+  padding: 1rem 0;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: #0b9185;
+  }
+}
+</style>

@@ -8,7 +8,6 @@
         <!-- Bulma Version 0.9.0-->
         <link rel='stylesheet' href='https://unpkg.com/bulma@0.9.0/css/bulma.min.css'>
         <link rel="stylesheet" href="../css/kanban.css">
-        <script src="https://kit.fontawesome.com/7dc3015a44.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <nav class="navbar has-shadow">
@@ -277,7 +276,6 @@
     </div>
 </div>
 </footer>
-<script src="../js/bulma.js"></script>
 </body>
 </html>
 </template>

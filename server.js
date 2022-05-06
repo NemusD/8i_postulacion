@@ -4,17 +4,51 @@ const jwt = require('jsonwebtoken')
 const http = require('http')
 const fs = require('fs')
 const url = require('url')
-
-//const db = require('./assets/db/migrations')
-const { createUser, getUsers, changeStatus, newProducts, listproducts, updateProducts, deleteProduct } = require('./db/index')
-
+//const db = require('./db/migrations')
+const { createUser, getUsers, changeStatus, newProducts, listproducts, updateProducts, deleteProduct } = require('./assets/db')
+const axios = require('axios')
 const { Pool } = require ('pg')
-const { decode } = require('punycode')
+const { next } = require('process')
 
-const server = http-createSercer(async (req, res) => {
+const server = http.createServer(async (req, res) => {
+    const { name, email, password } = url.parse(req.url,true).query;
+    let user = {
+        name,
+        email,
+        password
+    };
+    let data = JSON.parse(fs.readFileSync("products.json", "utf-8"));
+    let users = data.users;
+    if (req.url.startsWith("/Home")) {
+        users.push(user);
+        fs.writeFileSync("products.json", JSON.stringify(data));
+        res.end();
+    }
+    if (req.url.startsWith("App")) {
+        axios
+        .get(`https://fakestoreapi.com/products`)
+        .then((response) => response.data.results[0])
+        .catch((e) => {
+            res.end(e.message);
+        });
+    }
+    function getData(id) { 
+        var setting = {
+            url: `https://fakestoreapi.com/products/${id}`,
+            method: "GET",
+        };
+        $.ajax(setting).done(function (response) { 
+            $("#title").text(response.title);
+            $("#price").text(`Price: ${response.price} [USD]`);
+            $("#category").text(`Category: ${response.category}`);
+            $("#description").text(`Description: ${response.description}`);
+            $("#img").attr("src", response.image["front_default"]);
+            statspoker(response);
+        })
+    }
     //Cargar la página
     if(req.url === '/' && req.method === 'GET') {
-        fs.readFile('./postulacion_8i/views/Home.vue', (error,file) => {
+        fs.readFile('./views/index.html', (error,file) => {
             if(error) console.log(error)
 
             res.writeHead(200, { 'Content-Type':'text/html' })
@@ -67,8 +101,8 @@ app.use('/', express.static(__dirname + '/views'))
 //Configuración verificación de usuarios
 const secretKey = 'llave'
 
-app.get('/login', (req, res) => {
-    const { email, password } =req.query
+app.get('/Login', (req, res) => {
+    const { email, password } = req.query
     console.log(req.query)
 
     const user = saveUsers.find((user) => user.email == email && user.password == password);
@@ -85,14 +119,19 @@ app.get('/login', (req, res) => {
     }
 })
 
-app.get('/App', (req,res) => {
+app.get('/login', (req,res) => {
     let { token } = req.query;
     jwt.verify(token, secretKey, (err, decoded) => {
-        err ?
-        res.status(401).send({
-            error: '401 no autorizado',
-            message: err.message
-        })
-        : res.send (`Bienvenido usuario validado ${decoded.data.email}`)
+        if (err) {
+            return res.status(401).send({
+                error: '401 no autorizado',
+                message: err.message,
+            });
+        } else {
+            res.send (`Bienvenido ${users.name} has sido validado ${decoded.data.email}`)
+            res.redirect(__dirname + '/views/App.vue')
+        }
+            req.token = token
+            next()
     })
 })
