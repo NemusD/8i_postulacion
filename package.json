@@ -4,10 +4,15 @@
   "description": "Prueba tecnica de postulación",
   "main": "server.js",
   "scripts": {
-    "serve": "nodemon app.js",
+    "serve": "nodemon server.js",
     "prod": "",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "NemusD",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bulma": "^0.9.3",
+    "jsonwebtoken": "^8.5.1",
+    "vuex": "^4.0.2"
+  }
 }

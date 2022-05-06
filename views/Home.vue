@@ -1,24 +1,21 @@
 <template>
     <div>
-        <link
-  rel="stylesheet"
-  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-  crossorigin="anonymous"
-/>
-<div class="w-50 m-auto">
-  <h2>👽 Bienvenido a LA NASA 👽</h2>
-  <div class="row my-5 border rounded p-5">
-      <h6 class="text-center mb-5 col-12">Registrese para poder pasar a evaluación</h6>
-      <div class="col col-4">Email:</div>
-      <div class="col col-8"><input type="text" class="form-control" id="email"></div>
-      <div class="col col-4">Nombre:</div>
-      <div class="col col-8"><input type="text" class="form-control" id="nombre"></div>
-      <div class="col col-4">Contraseña:</div>
-      <div class="col col-8"><input type="password" class="form-control" id="password"></div>
-      <div class="col-12 mt-5">
-          <button class="bg-light rounded text-success m-auto">Registrarme</button>
-      </div>
-  </div>
+        <h1 class="title is-1 has-text-white has-background-primary has-text-centered">
+            {{ title.toUpperCase() }} Productos
+            {{ countTitles !=0 ? countTitles : ""}} Cantidad
+        </h1>
     </div>
 </template>
+
+<script>
+import { mapState } from "vuex";
+import { mapGetters } from "vuex";
+
+export default {
+  name: "Purchase",
+  computed: {
+    ...mapState(["title"]),
+    ...mapGetters(["countTitles"]),
+  },
+};
+</script>
